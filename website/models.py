@@ -3,9 +3,6 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-class Steg_Job(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True)
 
 # id: the unique id associated with the job
 # key: the steganographic key for the file
