@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content %} 
+
+<head>
+    <style>
+        .button {
+            background-color: #25a244; /* Green */
+            border: none;
+            color: #f8f9fa;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+    
+    <h1 style="text-align: left; color: #f8f9fa;"><strong>Encode message </strong></h1>
+    <br/>
+
+
+    <form method="post" action="/invisible_steganography" enctype="multipart/form-data">
+        <h3 style="text-align: left; color: #e9ecef;"><strong>Upload Carrier File: </strong></h3>
+        <p>
+            {% if filename %}
+                <p style="text-align: left; color: #dee2e6;">{{filename}}</p>
+            {% else %}
+                <input type="file" name="file" autocomplete="off" required style="color: #dee2e6;">
+            {% endif %}
+        </p>
+        <br/>
+        <h3 style="text-align: left; color: #e9ecef;"><strong>Upload Message File: </strong></h3>
+        <p>
+            {% if m_filename %}
+                <p style="text-align: left; color: #dee2e6;">{{m_filename}}</p>
+            {% else %}
+                <input type="file" name="m_file" autocomplete="off" style="color: #dee2e6;">
+            {% endif %}
+        </p>
+        <br/>
+        <h3 style="text-align: left; color: #e9ecef;"><strong>OR: </strong></h3>
+        <br/>
+        <div class="form-group">
+            <h3 style="text-align: left; color: #e9ecef;"><strong>Enter Secret Message: </strong></h3>
+            {% if message %}
+                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="message" name="message" placeholder="secret message" value="{{message}}" />
+            {% else %}
+                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="message" name="message" placeholder="secret message"/>
+            {% endif %}
+        </div>
+        <br/>
+        {% if not filename or not message %}
+        <button type="submit" class="button" name="action" value="submit_text">Generate Key Text</button>
+        <button type="submit" class="button" name="action" value="submit_file">Generate Key File</button>
+        {% elif not key %}
+        <button type="submit" class="button" name="action" value="cancel">Cancel</button>
+        {% endif %}
+    </form>
+    <br/>
+    <div>
+        {% if filename and out_filename %}
+            {% if out_filename %}
+                <a href="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" download>
+                    <h3 style="text-align: left; color: #4286f4;">{{out_filename}}</h3>
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <br/>
+    
+
+{% endblock %}

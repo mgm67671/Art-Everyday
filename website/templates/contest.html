@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content %} 
+
+<head>
+    <style>
+        .button {
+            background-color: #6A2C2E; /* Green */
+            border: none;
+            color: #D9BF77;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<div class = "text-center">
+<h1 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Today's Prompt:</strong></h1>
+<h2 style="text-align: middle; color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">"{{prompt}}"</h2>
+<p style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"> You have until: {{contest_end_time}} to submit an original piece of art adhearing to the prompt. Best of Luck!</p>
+</div>
+<br/>
+<h2 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Contest Rules:</strong></h2>
+<ul>
+    <li><p style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Submitted file must be of types: (.png, .jpg, .gif, .bmp)</p></li>
+    <li><p style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">The piece must have been created within the 24 hour contest window</p></li>
+    <li><p style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">No plagarized or AI generated art allowed</p></li>
+</ul> 
+<br/>
+
+    <form method="post" action="/contest" enctype="multipart/form-data">
+        <h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Upload Your Submission: </strong></h3>
+        <p>
+            {% if filename %}
+                <p style="text-align: left; color: #6A2C2E;">{{filename}}</p>
+            {% else %}
+                <input type="file" name="file" autocomplete="off" required style="color: #6A2C2E;">
+            {% endif %}
+        </p>
+        <br/>
+        <!-- <h3 style="text-align: left; color: #e9ecef;"><strong>Upload Steg File: </strong></h3>
+    <br/>
+        <p>
+            {% if out_filename %}
+                <p style="text-align: left; color: #dee2e6;">{{out_filename}}</p>
+            {% else %}
+                <input type="file" name="m_file" autocomplete="off" required style="color: #dee2e6;">
+            {% endif %}
+        </p> -->
+        <!-- <br/>
+        <div class="form-group">
+            <h3 style="text-align: left; color: #e9ecef;"><strong>Enter Key: </strong></h3>
+            {% if message %}
+                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="key" name="key" placeholder="key" value="{{key}}" />
+            {% else %}
+                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="key" name="key" placeholder="key"/>
+            {% endif %}
+        </div>
+        <br/> -->
+        {% if not filename or not message %}
+        <button type="submit" class="button" name="action" value="submit">Submit</button>
+        {% elif not key %}
+        <button type="submit" class="button" name="action" value="cancel">Cancel</button>
+        {% endif %}
+    </form>
+    <br/>
+    <div>
+        {% if filename and key %}
+            <h3 style="text-align: left; color: #e9ecef;">{{filename}}</h3>
+            {% if out_filename %}
+                <a href="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" download>
+                    <h3 style="text-align: left; color: #4286f4;">{{out_filename}}</h3>
+                </a> 
+                {% if out_is_image %}
+                    <img src="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" alt="">
+                {% endif %}
+            {% endif %}
+            {% if message %}
+                <h3 style="text-align: left; color: #e9ecef;">Message: <strong>"{{message}}"</strong></h3>
+            {% endif %}
+
+            {% if is_image %}
+                <img src="{{url_for('static', filename = '/uploaded_images/' + filename)}}" alt="">
+            {% endif %}
+        {% endif %}
+    </div>
+    <br/>
+    
+
+{% endblock %}

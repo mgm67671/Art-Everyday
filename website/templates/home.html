@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content %} 
+<div class = "text-center">
+<h1 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Yesterday's Winners!</strong></h1>
+<h2 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Prompt: "PROMPT"</h2>
+<br/>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>1st Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
+<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
+<br/>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>2nd Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
+<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
+<br/>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>3rd Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
+<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
+<br/>
+</div>
+{% endblock %}

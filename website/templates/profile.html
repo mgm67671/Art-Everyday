@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content %} 
+    
+    <h1 style="text-align: left; color: #e9ecef;"><strong>Your Previous Steganorgaphy Jobs:</strong></h1>
+    <ul style="color: #e9ecef;">
+        {% for steg in user.jobs|reverse %}
+            <li><p style="text-align: left; color: #e9ecef;"><strong>File:</strong> {{steg.filename}}</p>
+            <p style="text-align: left; color: #e9ecef;"><strong>Key:</strong> {{steg.key}}</p>
+            <p style="text-align: left; color: #e9ecef;"><strong>Type:</strong> {{steg.steg_type}}</p>
+            <p style="text-align: left; color: #e9ecef;"><strong>Date:</strong> {{steg.date}}</p>
+            <br/></li>
+        {% endfor %}
+    </ul>
+    
+
+{% endblock %}

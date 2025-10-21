@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block title %}Sign Up{% endblock %}
+{% block content %} 
+<head>
+    <style>
+        .button {
+            background-color: #6A2C2E; /* Green */
+            border: none;
+            color: #D9BF77;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+<form method = "POST">
+    <br/>
+    <h3 align="center" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Login</h3>
+    <div class="form-group">
+        <label for="email" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Email Address</label>
+        <input type="email" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="email" name="email" placeholder="Enter email"/>
+    </div>
+    <div class="form-group">
+        <label for="password" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Password</label>
+        <input type="password" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="password" name="password" placeholder="Enter password"/>
+    </div>
+    <br/>
+    <button type="submit" class="button">Login</button>
+</form>
+{% endblock %}
