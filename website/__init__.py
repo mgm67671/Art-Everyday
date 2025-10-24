@@ -19,13 +19,15 @@ def create_app():
     from.views import views
     from.auth import auth
     from.contest import contest
+    from.voting import voting
 
     # these register the auth and views routes, the url prefix is anything before the / that must be there to get into the route
     app.register_blueprint(views, url_prefix = '/')
     app.register_blueprint(auth, url_prefix = '/')
     app.register_blueprint(contest, url_prefix = '/')
+    app.register_blueprint(voting, url_prefix = '/')
 
-    from.models import User, Subimssion
+    from.models import User, Submission, Vote
 
     create_db(app)
 

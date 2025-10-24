@@ -1,12 +1,12 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% extends "base.html" %} {% block title %}Voting{% endblock %}
 {% block content %} 
 
 <head>
     <style>
         .button {
-            background-color: #25a244; /* Green */
+            background-color: #6A2C2E;
             border: none;
-            color: #f8f9fa;
+            color: #D9BF77;
             padding: 15px 32px;
             text-align: center;
             text-decoration: none;
@@ -15,61 +15,98 @@
             margin: 4px 2px;
             cursor: pointer;
         }
+        .submission-card {
+            border: 2px solid #6A2C2E;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #fff;
+        }
+        .submission-image {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 5px;
+        }
     </style>
 </head>
-    
-    <h1 style="text-align: left; color: #f8f9fa;"><strong>Encode message </strong></h1>
+
+<div class="text-center">
+    <h1 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Vote for Today's Best Art!</strong></h1>
+    <h2 style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">"{{prompt}}"</h2>
     <br/>
-
-
-    <form method="post" action="/invisible_steganography" enctype="multipart/form-data">
-        <h3 style="text-align: left; color: #e9ecef;"><strong>Upload Carrier File: </strong></h3>
-        <p>
-            {% if filename %}
-                <p style="text-align: left; color: #dee2e6;">{{filename}}</p>
-            {% else %}
-                <input type="file" name="file" autocomplete="off" required style="color: #dee2e6;">
-            {% endif %}
-        </p>
-        <br/>
-        <h3 style="text-align: left; color: #e9ecef;"><strong>Upload Message File: </strong></h3>
-        <p>
-            {% if m_filename %}
-                <p style="text-align: left; color: #dee2e6;">{{m_filename}}</p>
-            {% else %}
-                <input type="file" name="m_file" autocomplete="off" style="color: #dee2e6;">
-            {% endif %}
-        </p>
-        <br/>
-        <h3 style="text-align: left; color: #e9ecef;"><strong>OR: </strong></h3>
-        <br/>
-        <div class="form-group">
-            <h3 style="text-align: left; color: #e9ecef;"><strong>Enter Secret Message: </strong></h3>
-            {% if message %}
-                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="message" name="message" placeholder="secret message" value="{{message}}" />
-            {% else %}
-                <input type="text" style="color: #212529; background-color: #f8f9fa;" class="form-control" id="message" name="message" placeholder="secret message"/>
-            {% endif %}
+    
+    {% if has_voted %}
+        <div class="alert alert-info">
+            <h3 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">You have already voted today. Thank you!</h3>
         </div>
-        <br/>
-        {% if not filename or not message %}
-        <button type="submit" class="button" name="action" value="submit_text">Generate Key Text</button>
-        <button type="submit" class="button" name="action" value="submit_file">Generate Key File</button>
-        {% elif not key %}
-        <button type="submit" class="button" name="action" value="cancel">Cancel</button>
-        {% endif %}
-    </form>
-    <br/>
-    <div>
-        {% if filename and out_filename %}
-            {% if out_filename %}
-                <a href="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" download>
-                    <h3 style="text-align: left; color: #4286f4;">{{out_filename}}</h3>
-                </a>
-            {% endif %}
-        {% endif %}
+    {% elif submissions|length == 0 %}
+        <div class="alert alert-warning">
+            <h3 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">No submissions available for voting yet.</h3>
+        </div>
+    {% else %}
+        <p style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+            Select your top 3 submissions below. Remember, you cannot vote for your own submission!
+        </p>
+    {% endif %}
+</div>
+
+{% if not has_voted and submissions|length > 0 %}
+<form method="post" action="/voting">
+    <div class="container">
+        <!-- Display all submissions -->
+        {% for submission in submissions %}
+        <div class="submission-card">
+            <div class="row">
+                <div class="col-md-6">
+                    {% if submission.filename %}
+                        <img src="{{url_for('static', filename='uploaded_images/' + submission.filename)}}" 
+                             alt="{{submission.submission_name}}" 
+                             class="submission-image"/>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <h4 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+                        <strong>{{submission.submission_name or 'Untitled'}}</strong>
+                    </h4>
+                    <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">
+                        By: User {{submission.user_id}}
+                    </p>
+                    <p style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+                        Current Score: {{submission.score or 0}} points
+                    </p>
+                    <br/>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="first_place" value="{{submission.id}}" id="first_{{submission.id}}">
+                        <label class="form-check-label" for="first_{{submission.id}}" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+                            1st Place (3 points)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="second_place" value="{{submission.id}}" id="second_{{submission.id}}">
+                        <label class="form-check-label" for="second_{{submission.id}}" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+                            2nd Place (2 points)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="third_place" value="{{submission.id}}" id="third_{{submission.id}}">
+                        <label class="form-check-label" for="third_{{submission.id}}" style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
+                            3rd Place (1 point)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    <br/>
     
+    <br/>
+    <div class="text-center">
+        <button type="submit" class="button">Submit Vote</button>
+    </div>
+</form>
+{% endif %}
+
+<br/>
 
 {% endblock %}
