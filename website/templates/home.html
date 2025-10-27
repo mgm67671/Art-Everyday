@@ -6,21 +6,21 @@
 <br/>
 
 {% if first_place %}
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥇 1st Place: </strong>"{{first_place.submission_name or 'Untitled'}}", By: User {{first_place.user_id}}</h3>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥇 1st Place: </strong>"{{first_place.submission_name or 'Untitled'}}", By: User {{first_place.user.username}}</h3>
 <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{first_place.score}} points</p>
 <img src="{{url_for('static', filename='uploaded_images/' + first_place.filename)}}" style="max-width: 600px; max-height: 500px; object-fit: contain;" />
 <br/><br/>
 {% endif %}
 
 {% if second_place %}
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥈 2nd Place: </strong>"{{second_place.submission_name or 'Untitled'}}", By: User {{second_place.user_id}}</h3>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥈 2nd Place: </strong>"{{second_place.submission_name or 'Untitled'}}", By: User {{second_place.user.username}}</h3>
 <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{second_place.score}} points</p>
 <img src="{{url_for('static', filename='uploaded_images/' + second_place.filename)}}" style="max-width: 500px; max-height: 400px; object-fit: contain;" />
 <br/><br/>
 {% endif %}
 
 {% if third_place %}
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥉 3rd Place: </strong>"{{third_place.submission_name or 'Untitled'}}", By: User {{third_place.user_id}}</h3>
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥉 3rd Place: </strong>"{{third_place.submission_name or 'Untitled'}}", By: User {{third_place.user.username}}</h3>
 <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{third_place.score}} points</p>
 <img src="{{url_for('static', filename='uploaded_images/' + third_place.filename)}}" style="max-width: 500px; max-height: 400px; object-fit: contain;" />
 <br/><br/>

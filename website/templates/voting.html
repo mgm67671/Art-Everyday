@@ -70,7 +70,7 @@
                         <strong>{{submission.submission_name or 'Untitled'}}</strong>
                     </h4>
                     <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">
-                        By: User {{submission.user_id}}
+                        By: {{submission.user.username}}
                     </p>
                     <p style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">
                         Current Score: {{submission.score or 0}} points

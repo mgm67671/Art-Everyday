@@ -12,6 +12,7 @@ from sqlalchemy.sql import func
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', lazy=True)
 
     filename = db.Column(db.String(128))
     submission_name = db.Column(db.String(128))

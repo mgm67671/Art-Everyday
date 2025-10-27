@@ -9,7 +9,7 @@ from . import db
 
 contest = Blueprint('contest', __name__)
 
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "bmp"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "bmp", "svg", "webp"}
 
 
 def allowed_file(filename: str) -> bool:
@@ -31,7 +31,7 @@ def contest_page():
             return redirect(url_for('contest.contest_page'))
 
         if not allowed_file(file.filename):
-            flash('Invalid file type. Please upload an image (png, jpg, jpeg, gif, bmp).', category='error')
+            flash('Invalid file type. Please upload an image (png, jpg, jpeg, gif, bmp, svg, webp).', category='error')
             return redirect(url_for('contest.contest_page'))
 
         safe_name = secure_filename(file.filename)
@@ -45,6 +45,7 @@ def contest_page():
         submission = Submission(
             user_id=current_user.id,
             filename=filename,
+            user=current_user,
             submission_name=os.path.splitext(safe_name)[0],
             prompt="Alien Invasion",  # placeholder for now
             score=0,

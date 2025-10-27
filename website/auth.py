@@ -43,6 +43,7 @@ def signup():
     if request.method == 'POST' and request.form.get("action") == "submit":
         t_email = request.form.get('email')
         password = request.form.get('password')
+        user = request.form.get('username')
         confirm_password = request.form.get('confirmpassword')
 
         if User.query.filter_by(email=t_email).first():
@@ -51,6 +52,10 @@ def signup():
             flash("Your email must be 4 characters or longer.", category='error')
         elif len(t_email) >150:
             flash("Your email must be shorter than 150 characters", category='error')
+        elif len(user) < 4:
+            flash("Your user name must be 4 characters or longer.", category='error')
+        elif len(user) > 32:
+            flash("Your user name must be shorter than 32 characters", category='error')
         elif password != confirm_password:
             flash("Your passwords must match.", category='error')
         elif len(password) < 7:
@@ -58,7 +63,7 @@ def signup():
         elif len(password) > 32:
             flash("Your password must be shorter than 32 characters", category='error')
         else:
-            t_user = User(email=t_email, password_hash=generate_password_hash(password, method='pbkdf2:sha256', salt_length=32))
+            t_user = User(email=t_email, password_hash=generate_password_hash(password, method='pbkdf2:sha256', salt_length=32), username=user)
             db.session.add(t_user)
             db.session.commit()
             login_user(t_user, remember=True)

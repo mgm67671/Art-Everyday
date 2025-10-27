@@ -5,7 +5,10 @@
     <h1 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Your Profile</strong></h1>
     <br/>
     <div style="background-color: #fff; border: 2px solid #6A2C2E; border-radius: 10px; padding: 20px; max-width: 600px; margin: 0 auto;">
-        <h3 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">{{ user.email }}</h3>
+        <h3 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">{{ user.username }}</h3>
+        <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">
+            Registered Email: {{ user.email }}
+        </p>
         <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">
             Member since: {{ user.account_creation_date.strftime('%B %d, %Y') if user.account_creation_date else 'Unknown' }}
         </p>
