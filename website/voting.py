@@ -61,11 +61,11 @@ def voting_page():
         
         if first_submission:
             first_submission.first_place_votes += 1
-            first_submission.score += 3  # 3 points for first place
+            first_submission.score += 5  # 3 points for first place
         
         if second_submission:
             second_submission.second_place_votes += 1
-            second_submission.score += 2  # 2 points for second place
+            second_submission.score += 3  # 3 points for second place
         
         if third_submission:
             third_submission.third_place_votes += 1
