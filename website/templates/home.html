@@ -1,17 +1,39 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 {% block content %} 
-<div class = "text-center">
-<h1 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Yesterday's Winners!</strong></h1>
-<h2 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Prompt: "PROMPT"</h2>
+<div class="text-center">
+<h1 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>Current Winners!</strong></h1>
+<h2 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">Prompt: "{{prompt}}"</h2>
 <br/>
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>1st Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
-<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
-<br/>
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>2nd Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
-<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
-<br/>
-<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>3rd Place: </strong>"ART PIECE NAME", By: ARTIST NAME"</h3>
-<img src="{{url_for('static', filename='placeholder.jpeg')}}" align="middle" />
-<br/>
+
+{% if first_place %}
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥇 1st Place: </strong>"{{first_place.submission_name or 'Untitled'}}", By: User {{first_place.user.username}}</h3>
+<p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{first_place.score}} points</p>
+<img src="{{url_for('static', filename='uploaded_images/' + first_place.filename)}}" style="max-width: 600px; max-height: 500px; object-fit: contain;" />
+<br/><br/>
+{% endif %}
+
+{% if second_place %}
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥈 2nd Place: </strong>"{{second_place.submission_name or 'Untitled'}}", By: User {{second_place.user.username}}</h3>
+<p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{second_place.score}} points</p>
+<img src="{{url_for('static', filename='uploaded_images/' + second_place.filename)}}" style="max-width: 500px; max-height: 400px; object-fit: contain;" />
+<br/><br/>
+{% endif %}
+
+{% if third_place %}
+<h3 style="text-align: middle; color: #3A0b0b; font-family: 'Times New Roman', Times, serif;"><strong>🥉 3rd Place: </strong>"{{third_place.submission_name or 'Untitled'}}", By: User {{third_place.user.username}}</h3>
+<p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">Score: {{third_place.score}} points</p>
+<img src="{{url_for('static', filename='uploaded_images/' + third_place.filename)}}" style="max-width: 500px; max-height: 400px; object-fit: contain;" />
+<br/><br/>
+{% endif %}
+
+{% if not first_place %}
+<div class="alert alert-info">
+    <h3 style="color: #3A0b0b; font-family: 'Times New Roman', Times, serif;">No winners yet! Be the first to submit and vote!</h3>
+    <p style="color: #6A2C2E; font-family: 'Times New Roman', Times, serif;">
+        Visit the <a href="/contest">Art Contest</a> to submit your artwork, then head to <a href="/voting">Art Voting</a> to vote!
+    </p>
+</div>
+{% endif %}
+
 </div>
 {% endblock %}
