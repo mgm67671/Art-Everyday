@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-md-6">
                 {% if submission.filename %}
-                    <img src="{{url_for('static', filename='uploaded_images/' + submission.filename)}}" 
+                    <img src="{{submission.filename | image_url}}" 
                          alt="{{submission.submission_name}}" 
                          style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 5px;"/>
                 {% endif %}

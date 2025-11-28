@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from . import app
 from .models import User, Submission
 from . import db
+from .storage import get_storage_handler
 
 contest = Blueprint('contest', __name__)
 
@@ -18,9 +19,13 @@ def allowed_file(filename: str) -> bool:
 @contest.route('/contest', methods=['POST', 'GET'])
 @login_required
 def contest_page():
-    # Ensure upload directory exists
+    # Get storage handler (GCS or local)
+    storage_handler = get_storage_handler()
+    
+    # Ensure local upload directory exists (dev mode)
     upload_dir = os.path.join(app.root_path, app.config.get('IMAGE_UPLOADS', 'static/uploaded_images'))
-    os.makedirs(upload_dir, exist_ok=True)
+    if not app.config.get('GCS_BUCKET'):
+        os.makedirs(upload_dir, exist_ok=True)
 
     filename = None
 
@@ -38,8 +43,9 @@ def contest_page():
         # Make filename unique by prefixing timestamp and user id
         ts = datetime.utcnow().strftime('%Y%m%dT%H%M%S')
         filename = f"{current_user.id}_{ts}_{safe_name}"
-        save_path = os.path.join(upload_dir, filename)
-        file.save(save_path)
+        
+        # Upload to storage (GCS or local)
+        file_url = storage_handler.upload_file(file, filename, upload_dir)
 
         # Record submission in DB
         submission = Submission(

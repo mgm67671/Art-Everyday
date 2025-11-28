@@ -71,11 +71,11 @@
         {% if filename and key %}
             <h3 style="text-align: left; color: #e9ecef;">{{filename}}</h3>
             {% if out_filename %}
-                <a href="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" download>
+                <a href="{{out_filename | image_url}}" download>
                     <h3 style="text-align: left; color: #4286f4;">{{out_filename}}</h3>
                 </a> 
                 {% if out_is_image %}
-                    <img src="{{url_for('static', filename = '/uploaded_images/' + out_filename)}}" alt="">
+                    <img src="{{out_filename | image_url}}" alt="">
                 {% endif %}
             {% endif %}
             {% if message %}
@@ -83,7 +83,7 @@
             {% endif %}
 
             {% if is_image %}
-                <img src="{{url_for('static', filename = '/uploaded_images/' + filename)}}" alt="">
+                <img src="{{filename | image_url}}" alt="">
             {% endif %}
         {% endif %}
     </div>

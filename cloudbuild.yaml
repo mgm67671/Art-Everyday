@@ -1,0 +1,62 @@
+# Cloud Build configuration for automatic deployments
+# Triggered when code is pushed to main branch
+
+steps:
+  # Step 1: Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/art-everyday:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/art-everyday:latest'
+      - '.'
+    id: 'build-image'
+
+  # Step 2: Push the container image to GCR
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/art-everyday:$COMMIT_SHA'
+    id: 'push-image-sha'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/art-everyday:latest'
+    id: 'push-image-latest'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'art-everyday'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/art-everyday:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--quiet'
+    id: 'deploy-cloud-run'
+
+# Store images in Google Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/art-everyday:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/art-everyday:latest'
+
+# Build options
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+  
+# Timeout for the entire build
+timeout: '1200s'
+
+# Tags for organizing builds
+tags:
+  - 'art-everyday'
+  - 'cloud-run'
+  - 'automated-deployment'

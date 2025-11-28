@@ -1,0 +1,4 @@
+functions-framework==3.*
+google-cloud-secret-manager==2.18.2
+pg8000==1.30.5
+SQLAlchemy==2.0.40

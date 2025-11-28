@@ -1,0 +1,22 @@
+# .gcloudignore - Files to exclude from Cloud Build
+.git
+.gitignore
+*.pyc
+__pycache__/
+instance/
+*.db
+.env
+.venv
+venv/
+env/
+*.log
+.vscode/
+.idea/
+*.md
+!README.md
+docs/
+tests/
+.pytest_cache/
+htmlcov/
+.coverage
+*.ipynb

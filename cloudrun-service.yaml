@@ -1,0 +1,58 @@
+# Cloud Run service configuration
+# Deploy with: gcloud run services replace cloudrun-service.yaml
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: art-everyday
+  labels:
+    cloud.googleapis.com/location: us-central1
+spec:
+  template:
+    metadata:
+      annotations:
+        # Connect to Cloud SQL
+        run.googleapis.com/cloudsql-instances: PROJECT_ID:REGION:art-everyday-db
+        # Auto-scaling configuration
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '10'
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: art-everyday-sa@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+      - image: gcr.io/PROJECT_ID/art-everyday:latest
+        ports:
+        - name: http1
+          containerPort: 8080
+        env:
+        # Database configuration
+        - name: CLOUD_SQL_CONNECTION_NAME
+          value: PROJECT_ID:REGION:art-everyday-db
+        - name: DB_USER
+          value: art_everyday_user
+        - name: DB_NAME
+          value: art_everyday
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: db-password
+              key: latest
+        # Application secrets
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: flask-secret-key
+              key: latest
+        # GCS configuration
+        - name: GCS_BUCKET
+          value: PROJECT_ID-art-submissions
+        - name: FLASK_ENV
+          value: production
+        resources:
+          limits:
+            cpu: '1'
+            memory: 512Mi
+  traffic:
+  - percent: 100
+    latestRevision: true
