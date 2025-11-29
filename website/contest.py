@@ -11,6 +11,7 @@ from .storage import get_storage_handler
 contest = Blueprint('contest', __name__)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "bmp", "svg", "webp"}
+MAX_FILE_SIZE = 10485760
 
 
 def allowed_file(filename: str) -> bool:
@@ -37,6 +38,10 @@ def contest_page():
 
         if not allowed_file(file.filename):
             flash('Invalid file type. Please upload an image (png, jpg, jpeg, gif, bmp, svg, webp).', category='error')
+            return redirect(url_for('contest.contest_page'))
+
+        if size > MAX_FILE_SIZE:
+            flash('The file too large. Please upload an image of 10MB or less.', category='error')
             return redirect(url_for('contest.contest_page'))
 
         safe_name = secure_filename(file.filename)
