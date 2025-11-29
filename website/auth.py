@@ -46,16 +46,18 @@ def signup():
         user = request.form.get('username')
         confirm_password = request.form.get('confirmpassword')
 
-        if User.query.filter_by(email=t_email).first():
-            flash("Your email is already in use.", category='error')
-        elif len(t_email) < 4:
+        if len(t_email) < 4:
             flash("Your email must be 4 characters or longer.", category='error')
         elif len(t_email) >150:
             flash("Your email must be shorter than 150 characters", category='error')
+        elif User.query.filter_by(email=t_email).first():
+            flash("Your email is already in use.", category='error')
         elif len(user) < 4:
             flash("Your user name must be 4 characters or longer.", category='error')
         elif len(user) > 32:
             flash("Your user name must be shorter than 32 characters", category='error')
+        elif User.query.filter_by(Username=user).first():
+            flash("Your username is already in use.", category='error')
         elif password != confirm_password:
             flash("Your passwords must match.", category='error')
         elif len(password) < 7:
