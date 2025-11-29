@@ -14,6 +14,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['IMAGE_UPLOADS'] = os.environ.get('IMAGE_UPLOADS', 'static/uploaded_images')
 app.config['GCS_BUCKET'] = os.environ.get('GCS_BUCKET', None)
+app.config['MAX_CONTENT_LENGTH'] = 10485760
 
 # Database configuration - supports both SQLite (dev) and Cloud SQL (production)
 if os.environ.get('CLOUD_SQL_CONNECTION_NAME'):
