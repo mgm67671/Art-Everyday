@@ -12,7 +12,7 @@ from sqlalchemy.sql import func
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', lazy=True)
+    user = db.relationship('User', lazy=True, back_populates='submissions')
 
     filename = db.Column(db.String(128))
     submission_name = db.Column(db.String(128))
@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(150))
     account_creation_date = db.Column(db.DateTime(timezone=True), default=func.now())
 
-    submissions = db.relationship('Submission')
+    submissions = db.relationship('Submission', back_populates='user')
     votes = db.relationship('Vote')
     
     first_place_wins = db.Column(db.Integer, default=0)

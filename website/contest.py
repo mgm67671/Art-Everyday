@@ -40,8 +40,18 @@ def contest_page():
             flash('Invalid file type. Please upload an image (png, jpg, jpeg, gif, bmp, svg, webp).', category='error')
             return redirect(url_for('contest.contest_page'))
 
+        # Determine uploaded file size safely
+        size = request.content_length or 0
+        if not size:
+            try:
+                file.stream.seek(0, os.SEEK_END)
+                size = file.stream.tell()
+                file.stream.seek(0)
+            except Exception:
+                size = 0
+
         if size > MAX_FILE_SIZE:
-            flash('The file too large. Please upload an image of 10MB or less.', category='error')
+            flash('The file is too large. Please upload an image of 10MB or less.', category='error')
             return redirect(url_for('contest.contest_page'))
 
         safe_name = secure_filename(file.filename)
