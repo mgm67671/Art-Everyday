@@ -4,6 +4,7 @@ from datetime import date
 import os
 from.__init__ import get_app
 from .models import Submission, User
+from .prompt_utils import get_daily_prompt
 from . import db
 # a blueprint is a collection of routes
 views = Blueprint('views', __name__)
@@ -35,7 +36,7 @@ def home():
         first_place=top_submissions[0],
         second_place=top_submissions[1],
         third_place=top_submissions[2],
-        prompt="Alien Invasion"  # TODO: Make this dynamic
+        prompt=get_daily_prompt()
     )
 
 @views.route('/profile')

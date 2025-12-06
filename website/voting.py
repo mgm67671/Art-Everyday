@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from datetime import datetime, date
 from flask_login import login_required, current_user
 from .models import User, Submission, Vote
+from .prompt_utils import get_daily_prompt
 from . import db
 
 voting = Blueprint('voting', __name__)
@@ -96,5 +97,5 @@ def voting_page():
         user=current_user,
         submissions=submissions,
         has_voted=user_has_voted,
-        prompt="Alien Invasion"  # TODO: Make this dynamic
+        prompt=get_daily_prompt()
     )
