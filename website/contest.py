@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+from google.cloud import storage
 from . import app
 from .models import User, Submission
 from .prompt_utils import get_daily_prompt
@@ -11,20 +12,18 @@ from . import db
 contest = Blueprint('contest', __name__)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "bmp", "svg", "webp"}
+GCS_BUCKET = "art-everyday-2025-art-submissions"
+GCS_PREFIX = "submissions/"
 
 
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @contest.route('/contest', methods=['POST', 'GET'])
 @login_required
 def contest_page():
-    # Ensure upload directory exists
-    upload_dir = os.path.join(app.root_path, app.config.get('IMAGE_UPLOADS', 'static/uploaded_images'))
-    os.makedirs(upload_dir, exist_ok=True)
-
     filename = None
-
     if request.method == 'POST' and request.form.get("action") == "submit":
         file = request.files.get('file')
         if not file or file.filename == '':
@@ -36,16 +35,25 @@ def contest_page():
             return redirect(url_for('contest.contest_page'))
 
         safe_name = secure_filename(file.filename)
-        # Make filename unique by prefixing timestamp and user id
         ts = datetime.utcnow().strftime('%Y%m%dT%H%M%S')
         filename = f"{current_user.id}_{ts}_{safe_name}"
-        save_path = os.path.join(upload_dir, filename)
-        file.save(save_path)
+        gcs_path = GCS_PREFIX + filename
+        # Upload to GCS
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.bucket(GCS_BUCKET)
+            blob = bucket.blob(gcs_path)
+            blob.upload_from_file(file, content_type=file.content_type)
+            # Make public (optional)
+            blob.make_public()
+        except Exception as e:
+            flash(f'Error uploading to cloud storage: {e}', category='error')
+            return redirect(url_for('contest.contest_page'))
 
         # Record submission in DB
         submission = Submission(
             user_id=current_user.id,
-            filename=filename,
+            filename=filename,  # store just the filename
             user=current_user,
             submission_name=os.path.splitext(safe_name)[0],
             prompt=get_daily_prompt(),
@@ -59,7 +67,6 @@ def contest_page():
 
         flash('Submission uploaded successfully!', category='success')
 
-    # Compute an example end-of-day contest time in local terms (UTC shown)
     now = datetime.utcnow()
     end_of_day = datetime(now.year, now.month, now.day, 23, 59, 59)
     if now > end_of_day:

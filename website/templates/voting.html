@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="col-md-6">
                     {% if submission.filename %}
-                        <img src="{{url_for('static', filename='uploaded_images/' + submission.filename)}}" 
+                        <img src="https://storage.googleapis.com/art-everyday-2025-art-submissions/submissions/{{submission.filename}}" 
                              alt="{{submission.submission_name}}" 
                              class="submission-image"/>
                     {% endif %}

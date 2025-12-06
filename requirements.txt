@@ -22,6 +22,7 @@ Flask==3.1.0
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
 frozenlist==1.5.0
+google-cloud-storage==2.16.0
 greenlet==3.1.1
 idna==3.10
 ipython==8.12.3
