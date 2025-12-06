@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, send_from_directory
 from flask_login import login_required, current_user
-from datetime import date, timedelta
+from datetime import date
 import os
 from.__init__ import get_app
 from .models import Submission, User
@@ -17,20 +17,13 @@ def favicon():
 
 @views.route('/')
 def home():
-    # Get yesterday's date for "yesterday's winners"
-    yesterday = date.today() - timedelta(days=1)
+    # Get today's date for current contest
+    today = date.today()
     
-    # Get top 3 submissions from yesterday (or most recent if none yesterday)
+    # Get top 3 submissions from today only
     top_submissions = Submission.query.filter(
-        db.func.date(Submission.contest_date) == yesterday
+        db.func.date(Submission.contest_date) == today
     ).order_by(Submission.score.desc()).limit(3).all()
-    
-    # If no submissions from yesterday, get the top 3 overall most recent
-    if not top_submissions or len(top_submissions) < 3:
-        top_submissions = Submission.query.order_by(
-            Submission.score.desc(), 
-            Submission.contest_date.desc()
-        ).limit(3).all()
     
     # Pad with None if we don't have 3 submissions
     while len(top_submissions) < 3:

@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+from os import path, getenv
 from flask_login import LoginManager
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'gndilbkcxtbivglojxxkhjgjojpgzgcbcejrjfxsezzegqltjrjryglvhljdteyqfvcszqvembjrzztearazxoaixjcwqwyguapsabfahmyerntekukprmupdewltlsu'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+app.config['SECRET_KEY'] = getenv('SECRET_KEY', 'gndilbkcxtbivglojxxkhjgjojpgzgcbcejrjfxsezzegqltjrjryglvhljdteyqfvcszqvembjrzztearazxoaixjcwqwyguapsabfahmyerntekukprmupdewltlsu')
+app.config['SQLALCHEMY_DATABASE_URI'] = getenv('SQLALCHEMY_DATABASE_URI', f'sqlite:///{DB_NAME}')
 app.config['IMAGE_UPLOADS'] = 'static/uploaded_images'
 
 def create_app():
