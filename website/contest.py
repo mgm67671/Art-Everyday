@@ -7,6 +7,7 @@ from . import app
 from .models import User, Submission
 from . import db
 from .storage import get_storage_handler
+from .prompt_utils import get_daily_prompt
 
 contest = Blueprint('contest', __name__)
 
@@ -68,7 +69,7 @@ def contest_page():
             filename=filename,
             user=current_user,
             submission_name=os.path.splitext(safe_name)[0],
-            prompt="Alien Invasion",  # placeholder for now
+            prompt=get_daily_prompt(),
             score=0,
             first_place_votes=0,
             second_place_votes=0,
@@ -88,7 +89,7 @@ def contest_page():
     return render_template(
         "contest.html",
         user=current_user,
-        prompt="Alien Invasion",
+        prompt=get_daily_prompt(),
         filename=filename,
         is_image=True if filename else False,
         contest_end_time=end_of_day.strftime('%Y-%m-%d %H:%M UTC'),
