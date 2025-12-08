@@ -56,7 +56,7 @@ def signup():
             flash("Your user name must be 4 characters or longer.", category='error')
         elif len(user) > 32:
             flash("Your user name must be shorter than 32 characters", category='error')
-        elif User.query.filter_by(Username=user).first():
+        elif User.query.filter_by(username=user).first():
             flash("Your username is already in use.", category='error')
         elif password != confirm_password:
             flash("Your passwords must match.", category='error')
